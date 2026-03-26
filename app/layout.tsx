@@ -99,6 +99,21 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               }
               // Check 2: after 2 seconds (catches late hydration or animation glitches)
               setTimeout(function() { gvCheckContent(2); }, 2000);
+
+              // ── View tracking beacon ──────────────────────────────────────
+              // Fires once per product page load. Fire-and-forget, never blocks render.
+              (function() {
+                var page = document.querySelector('[data-product-page]');
+                if (!page) return;
+                var slug = page.getAttribute('data-product-page');
+                if (!slug) return;
+                fetch('/api/track/view', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ slug: slug }),
+                  keepalive: true,
+                }).catch(function() {}); // silent on error
+              })();
             `,
           }}
         />

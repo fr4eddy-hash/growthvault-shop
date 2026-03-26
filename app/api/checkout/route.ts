@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { getProduct } from '@/lib/products';
+import { trackEvent } from '@/lib/tracking';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2024-06-20',
@@ -20,6 +21,9 @@ export async function POST(req: NextRequest) {
 
     // FREE download — skip Stripe, go straight to download
     if (numAmount === 0) {
+      // Track free checkout (fire-and-forget)
+      trackEvent('checkout_free', slug).catch(() => {});
+
       return NextResponse.json({
         url: `${appUrl}/success?free=1&slug=${slug}`,
       });
@@ -52,6 +56,9 @@ export async function POST(req: NextRequest) {
       // Collect email for sending download link
       customer_creation: 'always',
     });
+
+    // Track paid checkout start (fire-and-forget)
+    trackEvent('checkout_paid', slug).catch(() => {});
 
     return NextResponse.json({ url: session.url });
   } catch (err) {

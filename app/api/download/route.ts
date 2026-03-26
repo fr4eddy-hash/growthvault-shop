@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { getProduct } from '@/lib/products';
+import { trackEvent } from '@/lib/tracking';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2024-06-20',
@@ -38,6 +39,10 @@ export async function GET(req: NextRequest) {
         { status: 503 }
       );
     }
+
+    // Track free download (fire-and-forget)
+    trackEvent('download_free', slug).catch(() => {});
+
     return NextResponse.json({
       url: blobUrl,
       title: product.title,
@@ -69,6 +74,10 @@ export async function GET(req: NextRequest) {
         { status: 503 }
       );
     }
+
+    // Track paid download with revenue (fire-and-forget)
+    const amountCents = session.amount_total ?? 0;
+    trackEvent('download_paid', slug, { amount_cents: amountCents }).catch(() => {});
 
     return NextResponse.json({
       url: blobUrl,
