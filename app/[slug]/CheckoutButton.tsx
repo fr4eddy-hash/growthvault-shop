@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { track } from '@vercel/analytics';
 
 interface CheckoutButtonProps {
   slug: string;
@@ -34,15 +33,6 @@ export default function CheckoutButton({ slug, title, suggestedPrice, accent, ac
     }
     setLoading(true);
     setError('');
-
-    // Track: user initiated a paid checkout
-    track('checkout_start', {
-      slug,
-      title,
-      amount: numAmount,
-      type: 'paid',
-    });
-
     try {
       const res = await fetch('/api/checkout', {
         method: 'POST',
@@ -65,15 +55,6 @@ export default function CheckoutButton({ slug, title, suggestedPrice, accent, ac
   const handleFree = async () => {
     setFreeLoading(true);
     setError('');
-
-    // Track: user initiated a free download
-    track('checkout_start', {
-      slug,
-      title,
-      amount: 0,
-      type: 'free',
-    });
-
     try {
       const res = await fetch('/api/checkout', {
         method: 'POST',
@@ -115,7 +96,7 @@ export default function CheckoutButton({ slug, title, suggestedPrice, accent, ac
           >
             ${p}
             {p === 9 && ' — Fair'}
-            {p === suggestedPrice && ' — Suggested \u2605'}
+            {p === suggestedPrice && ' — Suggested ★'}
             {p === 49 && ' — Generous'}
           </button>
         ))}
@@ -141,9 +122,9 @@ export default function CheckoutButton({ slug, title, suggestedPrice, accent, ac
           disabled={loading}
         >
           {loading ? (
-            <><span className="spinner" />Processing\u2026</>
+            <><span className="spinner" />Processing…</>
           ) : (
-            `Pay $${amount || suggestedPrice} \u2192`
+            `Pay $${amount || suggestedPrice} →`
           )}
         </button>
       </div>
@@ -157,14 +138,14 @@ export default function CheckoutButton({ slug, title, suggestedPrice, accent, ac
       {/* Free download */}
       <button className="free-btn" onClick={handleFree} disabled={freeLoading}>
         {freeLoading ? (
-          <><span className="spinner" style={{ width: 14, height: 14 }} /> Getting your link\u2026</>
+          <><span className="spinner" style={{ width: 14, height: 14 }} /> Getting your link…</>
         ) : (
-          '\u2193 Download free ($0)'
+          '↓ Download free ($0)'
         )}
       </button>
 
       <p className="checkout-note">
-        \uD83D\uDD12 Secure checkout via Stripe \u00b7 Instant PDF download \u00b7 No account required
+        🔒 Secure checkout via Stripe · Instant PDF download · No account required
       </p>
     </div>
   );

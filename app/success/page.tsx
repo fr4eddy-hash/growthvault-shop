@@ -1,16 +1,14 @@
 'use client';
 
-import { useEffect, useState, useRef, Suspense } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { track } from '@vercel/analytics';
 
 interface DownloadData {
   url: string;
   title: string;
   filename: string;
   customerEmail?: string;
-  amount?: number;
 }
 
 function SuccessContent() {
@@ -23,9 +21,6 @@ function SuccessContent() {
   const [data, setData] = useState<DownloadData | null>(null);
   const [errorMsg, setErrorMsg] = useState('');
   const [attempts, setAttempts] = useState(0);
-
-  // Prevent double-tracking on React Strict Mode / re-renders
-  const trackedConversion = useRef(false);
 
   useEffect(() => {
     if (!slug) {
@@ -48,26 +43,6 @@ function SuccessContent() {
         if (res.ok && json.url) {
           setData(json);
           setStatus('ready');
-
-          // Track: successful conversion (fires once per page load)
-          if (!trackedConversion.current) {
-            trackedConversion.current = true;
-            if (isFree) {
-              track('download_complete', {
-                slug,
-                title: json.title ?? '',
-                type: 'free',
-                amount: 0,
-              });
-            } else {
-              track('checkout_complete', {
-                slug,
-                title: json.title ?? '',
-                type: 'paid',
-                amount: json.amount ?? 0,
-              });
-            }
-          }
         } else if (res.status === 402 && attempts < 5) {
           // Payment processing — retry after delay
           setAttempts((a) => a + 1);
@@ -86,16 +61,6 @@ function SuccessContent() {
     return () => clearTimeout(timeout);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const handleDownloadClick = () => {
-    if (!slug || !data) return;
-    // Track: user actually clicked the download button
-    track('download_click', {
-      slug,
-      title: data.title ?? '',
-      type: isFree ? 'free' : 'paid',
-    });
-  };
 
   // Loading state
   if (status === 'loading') {
@@ -157,7 +122,6 @@ function SuccessContent() {
         className="download-btn"
         target="_blank"
         rel="noopener noreferrer"
-        onClick={handleDownloadClick}
       >
         ↓ Download Your Guide
       </a>
