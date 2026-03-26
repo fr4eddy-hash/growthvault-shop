@@ -33,7 +33,7 @@ export default function ProductPage({ params }: Props) {
   } as React.CSSProperties;
 
   return (
-    <div style={cssVars}>
+    <div style={cssVars} data-product-page={product.slug}>
       {/* NAV */}
       <nav>
         <Link href="/" className="nav-logo">Growth<span>Vault</span></Link>
@@ -42,7 +42,7 @@ export default function ProductPage({ params }: Props) {
         </Link>
       </nav>
 
-      {/* PRODUCT HERO */}
+      {/* PRODUCT HERO — fade-up is CSS-only, no JS required */}
       <section className="product-hero">
         <div className="container">
           <div className="product-hero-grid">
@@ -102,15 +102,14 @@ export default function ProductPage({ params }: Props) {
         </div>
       </section>
 
-      {/* CHECKOUT — placed directly after hero for immediate access */}
-      <section id="get-it" style={{ paddingTop: 0 }}>
+      {/* CHECKOUT — directly after hero, always visible */}
+      <section id="get-it" data-section="checkout" style={{ paddingTop: 0 }}>
         <div className="container--xs">
-          <span className="section-label reveal" style={{ textAlign: 'center', display: 'block' }}>Get The Guide</span>
-          <h2 className="reveal" style={{ textAlign: 'center', marginBottom: 8 }}>Ready when you are.</h2>
-          <p className="reveal" style={{ textAlign: 'center', color: 'var(--muted)', fontSize: '0.92rem', marginBottom: 8 }}>
+          <span className="section-label" style={{ textAlign: 'center', display: 'block' }}>Get The Guide</span>
+          <h2 style={{ textAlign: 'center', marginBottom: 8 }}>Ready when you are.</h2>
+          <p style={{ textAlign: 'center', color: 'var(--muted)', fontSize: '0.92rem', marginBottom: 8 }}>
             Instant download. PDF. {product.pages} pages + {product.extras}.
           </p>
-
           <CheckoutButton
             slug={product.slug}
             title={product.title}
@@ -121,36 +120,34 @@ export default function ProductPage({ params }: Props) {
         </div>
       </section>
 
-      {/* WHO IT'S FOR */}
-      <section>
+      {/* WHO IT'S FOR — always visible, no JS dependency */}
+      <section data-section="who">
         <div className="container--sm">
           <hr className="divider" style={{ margin: '0 0 60px' }} />
-          <span className="section-label reveal">Who This Is For</span>
-          <p className="reveal" style={{ fontSize: '1.1rem', lineHeight: 1.9, color: '#bbb8b0', marginTop: 16 }}>
+          <span className="section-label">Who This Is For</span>
+          <p style={{ fontSize: '1.1rem', lineHeight: 1.9, color: '#bbb8b0', marginTop: 16 }}>
             {product.who}
           </p>
-
-          <div className="quote-block reveal" style={{ marginTop: 40 }}>
+          <div className="quote-block" style={{ marginTop: 40 }}>
             <blockquote>"{product.promise}"</blockquote>
             <cite>What you'll walk away with</cite>
           </div>
         </div>
       </section>
 
-      {/* CHAPTERS */}
-      <section>
+      {/* CHAPTERS — always visible */}
+      <section data-section="chapters">
         <div className="container">
-          <div className="section-intro reveal">
+          <div className="section-intro">
             <span className="section-label">Inside the Guide</span>
             <h2>What you'll learn</h2>
             <p style={{ marginTop: 16, fontSize: '0.95rem', color: 'var(--muted)', lineHeight: 1.8 }}>
               {product.chapters} chapters. Every one actionable. No padding, no filler.
             </p>
           </div>
-
           <div className="chapters-list">
             {product.chapters_list.map((ch, i) => (
-              <div key={i} className="chapter-item reveal">
+              <div key={i} className="chapter-item">
                 <div className="chapter-num" style={{ color: product.accent, opacity: 0.6 }}>
                   {String(i + 1).padStart(2, '0')}
                 </div>
@@ -164,17 +161,16 @@ export default function ProductPage({ params }: Props) {
         </div>
       </section>
 
-      {/* WHAT'S INCLUDED */}
-      <section style={{ background: 'var(--bg2)', padding: '80px 0' }}>
+      {/* WHAT'S INCLUDED — always visible */}
+      <section data-section="benefits" style={{ background: 'var(--bg2)', padding: '80px 0' }}>
         <div className="container">
-          <div className="section-intro reveal">
+          <div className="section-intro">
             <span className="section-label">What's Included</span>
             <h2>Everything you need</h2>
           </div>
-
           <div className="benefits-grid">
             {product.benefits.map((b, i) => (
-              <div key={i} className="benefit-item reveal" style={{ '--accent-dim': product.accentDim, '--accent': product.accent } as React.CSSProperties}>
+              <div key={i} className="benefit-item" style={{ '--accent-dim': product.accentDim, '--accent': product.accent } as React.CSSProperties}>
                 <div className="benefit-check">✓</div>
                 <p>{b}</p>
               </div>
@@ -183,35 +179,34 @@ export default function ProductPage({ params }: Props) {
         </div>
       </section>
 
-      {/* QUOTE */}
-      <section>
+      {/* QUOTE — always visible */}
+      <section data-section="quote">
         <div className="container--sm">
-          <div className="quote-block reveal" style={{ margin: 0 }}>
+          <div className="quote-block" style={{ margin: 0 }}>
             <blockquote>"{product.quote.text}"</blockquote>
             <cite>— {product.quote.author}</cite>
           </div>
         </div>
       </section>
 
-      {/* FAQ */}
-      <section>
+      {/* FAQ — always visible */}
+      <section data-section="faq">
         <div className="container--sm">
           <hr className="divider" style={{ margin: '0 0 60px' }} />
-          <span className="section-label reveal">FAQ</span>
-          <h2 className="reveal" style={{ marginBottom: 8 }}>Questions answered.</h2>
-
+          <span className="section-label">FAQ</span>
+          <h2 style={{ marginBottom: 8 }}>Questions answered.</h2>
           <FaqSection items={product.faq} />
         </div>
       </section>
 
-      {/* CTA BOTTOM */}
-      <section style={{ padding: '0 0 100px' }}>
+      {/* CTA BOTTOM — always visible */}
+      <section data-section="cta-bottom" style={{ padding: '0 0 100px' }}>
         <div className="container--xs" style={{ textAlign: 'center' }}>
-          <h2 className="reveal" style={{ marginBottom: 16 }}>Don't overthink it.</h2>
-          <p className="reveal" style={{ color: 'var(--muted)', marginBottom: 32, fontSize: '0.95rem', lineHeight: 1.8 }}>
+          <h2 style={{ marginBottom: 16 }}>Don't overthink it.</h2>
+          <p style={{ color: 'var(--muted)', marginBottom: 32, fontSize: '0.95rem', lineHeight: 1.8 }}>
             $0 is fine. Read it. If it changes something for you, come back and pay what it was worth.
           </p>
-          <Link href="#get-it" className="btn btn--accent btn--lg reveal" style={{ '--accent': product.accent, '--accent-shadow': `${product.accent}40` } as React.CSSProperties}>
+          <Link href="#get-it" className="btn btn--accent btn--lg" style={{ '--accent': product.accent, '--accent-shadow': `${product.accent}40` } as React.CSSProperties}>
             Get This Guide →
           </Link>
         </div>
