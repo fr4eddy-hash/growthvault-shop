@@ -35,6 +35,9 @@ const PDF_MAP = {
   '08-etsy-launch-kit.pdf':           'etsy-guide',
   '09-homeowner-survival-guide.pdf':  'homeowner-guide',
   '10-career-pivot-blueprint.pdf':    'career-pivot',
+  '11-ai-agent-income.pdf':           'ai-agent-income',
+  '12-freelancer-to-ceo.pdf':         'freelancer-to-ceo',
+  '13-first-digital-product.pdf':     'first-digital-product',
 };
 
 async function uploadPdfs() {
