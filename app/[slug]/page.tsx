@@ -102,6 +102,25 @@ export default function ProductPage({ params }: Props) {
         </div>
       </section>
 
+      {/* CHECKOUT — placed directly after hero for immediate access */}
+      <section id="get-it" style={{ paddingTop: 0 }}>
+        <div className="container--xs">
+          <span className="section-label reveal" style={{ textAlign: 'center', display: 'block' }}>Get The Guide</span>
+          <h2 className="reveal" style={{ textAlign: 'center', marginBottom: 8 }}>Ready when you are.</h2>
+          <p className="reveal" style={{ textAlign: 'center', color: 'var(--muted)', fontSize: '0.92rem', marginBottom: 8 }}>
+            Instant download. PDF. {product.pages} pages + {product.extras}.
+          </p>
+
+          <CheckoutButton
+            slug={product.slug}
+            title={product.title}
+            suggestedPrice={product.price}
+            accent={product.accent}
+            accentDim={product.accentDim}
+          />
+        </div>
+      </section>
+
       {/* WHO IT'S FOR */}
       <section>
         <div className="container--sm">
@@ -171,25 +190,6 @@ export default function ProductPage({ params }: Props) {
             <blockquote>"{product.quote.text}"</blockquote>
             <cite>— {product.quote.author}</cite>
           </div>
-        </div>
-      </section>
-
-      {/* CHECKOUT */}
-      <section id="get-it">
-        <div className="container--xs">
-          <span className="section-label reveal" style={{ textAlign: 'center', display: 'block' }}>Get The Guide</span>
-          <h2 className="reveal" style={{ textAlign: 'center', marginBottom: 8 }}>Ready when you are.</h2>
-          <p className="reveal" style={{ textAlign: 'center', color: 'var(--muted)', fontSize: '0.92rem', marginBottom: 8 }}>
-            Instant download. PDF. {product.pages} pages + {product.extras}.
-          </p>
-
-          <CheckoutButton
-            slug={product.slug}
-            title={product.title}
-            suggestedPrice={product.price}
-            accent={product.accent}
-            accentDim={product.accentDim}
-          />
         </div>
       </section>
 
