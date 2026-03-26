@@ -16,12 +16,24 @@
  */
 
 import { put } from '@vercel/blob';
-import { readFileSync, readdirSync } from 'fs';
+import { readFileSync, readdirSync, existsSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PDF_DIR = join(__dirname, '..', 'pdfs');
+
+// Auto-load .env.local (dotenv not required)
+const envLocalPath = join(__dirname, '..', '.env.local');
+if (existsSync(envLocalPath)) {
+  const lines = readFileSync(envLocalPath, 'utf8').split('\n');
+  for (const line of lines) {
+    const m = line.match(/^([A-Z_][A-Z0-9_]*)=(.*)$/);
+    if (m && !process.env[m[1]]) {
+      process.env[m[1]] = m[2].replace(/^["']|["']$/g, '');
+    }
+  }
+}
 
 // Map of PDF filename → product slug
 const PDF_MAP = {
